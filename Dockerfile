@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 MAINTAINER Geo Van O <george.vo@alum.rpi.edu>
 
-RUN apt-get update && apt-get install -y wget build-essential tcl8.6 tcl8.6-dev git
+RUN apt-get update && apt-get install -y wget build-essential tcl8.6 tcl8.6-dev git && rm -rf /var/lib/apt/lists/*
 RUN useradd -ms /bin/bash eggdrop
 USER eggdrop
 WORKDIR /home/eggdrop
