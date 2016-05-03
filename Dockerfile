@@ -26,15 +26,4 @@ ENV CONFIG="eggdrop.conf"
 ENV FIRSTUN=""
 WORKDIR /home/eggdrop/eggdrop
 ADD entrypoint.sh /home/eggdrop/eggdrop
-#RUN if ! [ -z ${FIRSTRUN} ]; then USERFLAG="-m"; fi
-#RUN sed -i "/set nick \"Lamestbot\"/c\set nick \"$NICK\"" eggdrop.conf
-#RUN sed -i "/another.example.com:7000:password/d" eggdrop.conf
-#RUN sed -i "/you.need.to.change.this:6667/c\ \"${SERVER}\"" eggdrop.conf
-#RUN sed -i "/#listen 3333 all/c\listen ${LISTEN} all" eggdrop.conf
-#RUN sed -i "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" eggdrop.conf
-#RUN sed -i "/set userfile \"LamestBot.user\"/c\set userfile \"${USERFILE}\"" eggdrop.conf
-#RUN sed -i "/set chanfile \"LamestBot.chan\"/c\set chanfile \"${CHANFILE}\"" eggdrop.conf
-#RUN sed -i '/edit your config file completely like you were told/d' eggdrop.conf
-#RUN sed -i '/Please make sure you edit your config file completely/d' eggdrop.conf
-#CMD ./eggdrop -n ${USERFLAG} ${CONFIG}
 CMD /home/eggdrop/eggdrop/entrypoint.sh
