@@ -16,14 +16,14 @@ RUN ./configure --with-tclinc=/usr/include/tcl8.6/tcl.h --with-tcllib=/usr/lib/x
 RUN make config
 RUN make
 RUN make install
-ENV NICK="SuckBot"
-ENV SERVER="irc.undernet.org"
+ENV NICK=""
+ENV SERVER=""
 ENV LISTEN="3333"
-ENV OWNER="SuckDude"
-ENV USERFILE="suckbot.user"
-ENV CHANFILE="suckbot.chan"
+ENV OWNER=""
+ENV USERFILE="eggdrop.user"
+ENV CHANFILE="eggdrop.chan"
 ENV CONFIG="eggdrop.conf"
-ENV FIRSTUN=""
+ENV FIRSTRUN=""
 WORKDIR /home/eggdrop/eggdrop
 ADD entrypoint.sh /home/eggdrop/eggdrop
 CMD /home/eggdrop/eggdrop/entrypoint.sh
