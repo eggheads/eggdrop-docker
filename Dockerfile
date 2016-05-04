@@ -25,5 +25,6 @@ ENV CHANFILE="eggdrop.chan"
 ENV CONFIG="eggdrop.conf"
 ENV FIRSTRUN=""
 WORKDIR /home/eggdrop/eggdrop
+EXPOSE 3333
 ADD entrypoint.sh /home/eggdrop/eggdrop
 CMD /home/eggdrop/eggdrop/entrypoint.sh
