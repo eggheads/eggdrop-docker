@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+
+if [ "$1" = 'eggdrop.conf' ]; then
 
 cd /home/eggdrop/eggdrop
 if ! [ -z ${FIRSTRUN} ]; then USERFLAG="-m"; fi
@@ -57,4 +60,7 @@ if mountpoint -q /home/eggdrop/eggdrop/host; then
   fi
 fi
 
-./eggdrop -n ${USERFLAG} ${CONFIG}
+./eggdrop -n -m $1
+fi
+
+exec "$@"
