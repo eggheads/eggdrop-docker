@@ -17,12 +17,8 @@ if [ -z ${SERVER} ]; then
   echo "NICK   - set IRC nickname"
   echo "SERVER - set IRC server to connect to"
   echo ""
-  echo "IF THIS IS THE FIRST TIME running this instance"
-  echo "of eggdrop, you will want to add the FIRSTRUN=yes"
-  echo "argument as well."
-  echo ""
   echo "Example:"
-  echo "docker run -ti -e NICK=DockerBot -e SERVER=irc.freenode.net -e FIRSTRUN=yes eggdrop"
+  echo "docker run -ti -e NICK=DockerBot -e SERVER=irc.freenode.net eggdrop"
   echo ""
   echo "If you wish to telnet or DCC to your bot, you will"
   echo "need to expose the docker port to your host by"
@@ -43,24 +39,46 @@ sed -i "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" eggdrop.con
 sed -i '/edit your config file completely like you were told/d' eggdrop.conf
 sed -i '/Please make sure you edit your config file completely/d' eggdrop.conf
 
-if mountpoint -q /home/eggdrop/eggdrop/host; then
-  if ! [ -a /home/eggdrop/eggdrop/host/eggdrop.conf ]; then
-    mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/host/eggdrop.conf
-    ln -s /home/eggdrop/eggdrop/host/eggdrop.conf /home/eggdrop/eggdrop/eggdrop.conf
-  fi
-  if ! [ -a /home/eggdrop/eggdrop/host/eggdrop.user ]; then
-    mv /home/eggdrop/eggdrop/eggdrop.user /home/eggdrop/eggdrop/host/eggdrop.user
-    sed -i "/set chanfile ${USERFILE}/c\set chanfile host/${USERFILE}" eggdrop.conf
-    ln -s /home/eggdrop/eggdrop/host/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
-  fi
-  if ! [ -a /home/eggdrop/eggdrop/host/eggdrop.chan ]; then
-    mv /home/eggdrop/eggdrop/eggdrop.chan /home/eggdrop/eggdrop/host/eggdrop.chan
-    sed -i "/set chanfile ${CHANFILE}/c\set chanfile host/${CHANFILE}" eggdrop.conf
-    ln -s /home/eggdrop/eggdrop/host/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
+if ! mountpoint -q /home/eggdrop/eggdrop/data; then
+  echo ""
+  echo "#####################################################"
+  echo "You did not specify a location on the host machine"
+  echo "to store your data. This means NOTHING will persist"
+  echo "if this docker container is deleted or updated, such"
+  echo "as user lists, chan lists, or ban lists."
+  echo ""
+  echo "In other words, you will likely LOSE YOUR DATA!"
+  echo ""
+  echo "If you want to continue, type \"bad idea\" at the"
+  echo "prompt, otherwise, hit enter and run again, adding:"
+  echo "----------------------------------------------------"
+  echo "-v /path/to/your/saved/data/:/home/eggdrop/eggdrop/data"
+  echo "----------------------------------------------------"
+  echo "to your 'docker run' command."
+  echo "####################################################"
+  echo ""
+  echo "Do you want to continue without saved files? [no]:"
+  read input
+  
+  if [ "$input" != "bad idea" ]; then
+    exit
   fi
 fi
 
-./eggdrop -n -m $1
+mkdir -p /home/eggdrop/eggdrop/data
+if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.conf ]; then
+  ln -s /home/eggdrop/eggdrop/data/eggdrop.conf /home/eggdrop/eggdrop/eggdrop.conf
+fi
+if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.user ]; then
+  sed -i "/set userfile ${USERFILE}/c\set userfile data/${USERFILE}" eggdrop.conf
+fi
+  ln -s /home/eggdrop/eggdrop/data/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
+if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.chan ]; then
+  sed -i "/set chanfile ${CHANFILE}/c\set chanfile data/${CHANFILE}" eggdrop.conf
+fi
+  ln -s /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
+
+./eggdrop -nt -m $1
 fi
 
 exec "$@"

@@ -24,6 +24,7 @@ ENV USERFILE="eggdrop.user"
 ENV CHANFILE="eggdrop.chan"
 ENV FIRSTRUN=""
 WORKDIR /home/eggdrop/eggdrop
+RUN mkdir /home/eggdrop/eggdrop/data
 EXPOSE 3333
 ADD entrypoint.sh /home/eggdrop/eggdrop
 ENTRYPOINT ["/home/eggdrop/eggdrop/entrypoint.sh"]
