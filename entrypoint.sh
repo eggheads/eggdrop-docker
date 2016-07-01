@@ -10,9 +10,9 @@ if [ -z ${SERVER} ]; then
   echo ""
   echo "--------------------------------------------------"
   echo "You have not set one of the required variables."
-  echo "The following variables are must be set via the"
-  echo "-e command line argument in order to run"
-  echo "eggdrop:"
+  echo "The following variables must be set via the"
+  echo "-e command line argument in order to run eggdrop"
+  echo "for the first time:"
   echo ""
   echo "NICK   - set IRC nickname"
   echo "SERVER - set IRC server to connect to"
@@ -24,6 +24,10 @@ if [ -z ${SERVER} ]; then
   echo "need to expose the docker port to your host by"
   echo "adding -p 3333:3333 (or whatever port eggdrop is"
   echo "listening on) to your docker run command."
+  echo ""
+  echo "These variables only need to be used the first"
+  echo "time you run the container- after the first use,"
+  echo "you can edit the config file created, directly."
   echo "--------------------------------------------------"
   echo ""
   exit
@@ -67,16 +71,24 @@ fi
 
 mkdir -p /home/eggdrop/eggdrop/data
 if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.conf ]; then
-  ln -s /home/eggdrop/eggdrop/data/eggdrop.conf /home/eggdrop/eggdrop/eggdrop.conf
+  echo "Previous Eggdrop config file not detected, creating new persistent data file..."
+  mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/
+else
+  rm /home/eggdrop/eggdrop/eggdrop.conf
 fi
+ln -s /home/eggdrop/eggdrop/data/eggdrop.conf /home/eggdrop/eggdrop/eggdrop.conf
+
 if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.user ]; then
+  echo "Previous Eggdrop user file not detected, creating new persistent data file..."
   sed -i "/set userfile ${USERFILE}/c\set userfile data/${USERFILE}" eggdrop.conf
 fi
-  ln -s /home/eggdrop/eggdrop/data/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
+ln -s /home/eggdrop/eggdrop/data/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
+
 if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.chan ]; then
+  echo "Previous Eggdrop user file not detected, creating new persistent data file..."
   sed -i "/set chanfile ${CHANFILE}/c\set chanfile data/${CHANFILE}" eggdrop.conf
 fi
-  ln -s /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
+ln -s /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
 
 ./eggdrop -nt -m $1
 fi
