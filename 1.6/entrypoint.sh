@@ -6,7 +6,7 @@ if [ "$1" = 'eggdrop.conf' ]; then
 cd /home/eggdrop/eggdrop
 if ! [ -z ${FIRSTRUN} ]; then USERFLAG="-m"; fi
 
-if [ -z ${SERVER} ]; then
+if [ -z ${SERVER} ] || [ -z ${NICK}; then
   echo ""
   echo "--------------------------------------------------"
   echo "You have not set one of the required variables."
