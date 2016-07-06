@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-if [ "$1 = 'eggdrop' ]; then
+if [ "$1" = 'eggdrop.conf' ]; then
   cd /home/eggdrop/eggdrop
   if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.conf ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
     echo ""
@@ -88,6 +88,5 @@ if [ "$1 = 'eggdrop' ]; then
   ln -s /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
 
   ./eggdrop -nt -m $1
-  fi
 fi
 exec "$@"
