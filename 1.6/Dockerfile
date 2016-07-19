@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y wget unzip pgpgpg build-essential tcl8.
 RUN useradd -ms /bin/bash eggdrop
 USER eggdrop
 WORKDIR /home/eggdrop
-RUN wget www.geteggdrop.com \
+RUN wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz \
 && wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz.asc \
 && gpg --keyserver ha.pool.sks-keyservers.net --recv-key B0B3D92ABE1D20233A2ECB01DB909F5EE7C0E7F7 \
 && gpg --batch --verify eggdrop1.6.21.tar.gz.asc eggdrop1.6.21.tar.gz \
