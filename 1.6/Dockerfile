@@ -7,8 +7,8 @@ USER eggdrop
 WORKDIR /home/eggdrop
 RUN wget www.geteggdrop.com \
 && wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz.asc \
-&& gpg --keyserver pgpkeys.mit.edu --recv-key E7C0E7F7 \
-&& gpg --batch --verify eggdrop1.6.21.tar.gz.asc \
+&& gpg --keyserver ha.pool.sks-keyservers.net --recv-key B0B3D92ABE1D20233A2ECB01DB909F5EE7C0E7F7 \
+&& gpg --batch --verify eggdrop1.6.21.tar.gz.asc eggdrop1.6.21.tar.gz \
 && rm eggdrop1.6.21.tar.gz.asc
 RUN tar -zxvf eggdrop1.6.21.tar.gz
 WORKDIR /home/eggdrop/eggdrop1.6.21
