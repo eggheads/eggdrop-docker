@@ -1,10 +1,9 @@
-FROM ubuntu:14.04
+FROM alpine
 MAINTAINER Geo Van O <geo@eggheads.org>
 
-RUN apt-get update \
-&& apt-get install -y wget pgpgpg build-essential tcl8.6 tcl8.6-dev \
-&& rm -rf /var/lib/apt/lists/*
-RUN useradd -ms /bin/bash eggdrop
+RUN apk update && apk add --no-cache tcl tcl-dev wget make tar gpgme bash build-base
+#RUN useradd -ms /bin/bash eggdrop
+RUN adduser -S eggdrop
 USER eggdrop
 WORKDIR /home/eggdrop
 RUN wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz \
@@ -14,7 +13,8 @@ RUN wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz \
 && rm eggdrop1.6.21.tar.gz.asc \
 && tar -zxvf eggdrop1.6.21.tar.gz \
 && cd eggdrop1.6.21 \
-&& ./configure --with-tclinc=/usr/include/tcl8.6/tcl.h --with-tcllib=/usr/lib/x86_64-linux-gnu/libtcl8.6.so \
+#&& ./configure --with-tclinc=/usr/include/tcl8.6/tcl.h --with-tcllib=/usr/lib/x86_64-linux-gnu/libtcl8.6.so \
+&& CFLAGS="-std=gnu89" ./configure --with-tclinc=/usr/include/tcl.h --with-tcllib=/usr/lib/libtcl8.6.so \
 && make config \
 && make \
 && make install \
