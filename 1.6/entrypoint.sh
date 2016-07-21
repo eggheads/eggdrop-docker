@@ -36,12 +36,14 @@ if [ "$1" = 'eggdrop.conf' ]; then
     sed -i "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" eggdrop.conf
     sed -i "/set userfile \"LamestBot.user\"/c\set userfile ${USERFILE}" eggdrop.conf
     sed -i "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" eggdrop.conf
+    sed -i "/set realname \"/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" eggdrop.conf
     sed -i '/edit your config file completely like you were told/d' eggdrop.conf
     sed -i '/Please make sure you edit your config file completely/d' eggdrop.conf
   fi
 
   if ! mountpoint -q /home/eggdrop/eggdrop/data; then
     echo ""
+    echo "#####################################################"
     echo "#####################################################"
     echo "You did not specify a location on the host machine"
     echo "to store your data. This means NOTHING will persist"
@@ -50,20 +52,17 @@ if [ "$1" = 'eggdrop.conf' ]; then
     echo ""
     echo "In other words, you will likely LOSE YOUR DATA!"
     echo ""
-    echo "If you want to continue, type \"bad idea\" at the"
-    echo "prompt, otherwise, hit enter and run again, adding:"
+    echo "Mounting a datastore on the host system will also"
+    echo "give you easy access to edit your configuration file."
+    echo ""
+    echo "If you wish to add the data store, simply run the"
+    echo "container again, but this time adding the option:"
     echo "----------------------------------------------------"
     echo "-v /path/to/your/saved/data/:/home/eggdrop/eggdrop/data"
     echo "----------------------------------------------------"
     echo "to your 'docker run' command."
     echo "####################################################"
-    echo ""
-    echo "Do you want to continue without saved files? [no]:"
-    read input
-    
-    if [ "$input" != "bad idea" ]; then
-      exit
-    fi
+    echo "####################################################"
   fi
 
   mkdir -p /home/eggdrop/eggdrop/data

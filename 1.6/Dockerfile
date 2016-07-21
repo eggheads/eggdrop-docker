@@ -1,7 +1,6 @@
 FROM alpine
 MAINTAINER Geo Van O <geo@eggheads.org>
 
-#RUN apk update && apk add --no-cache tcl tcl-dev wget make tar gpgme bash build-base
 RUN apk update \
 && apk add --no-cache sudo
 RUN adduser -S eggdrop
@@ -17,13 +16,12 @@ RUN sudo -n apk add --no-cache tcl tcl-dev wget make tar gpgme bash build-base \
 && tar -zxvf eggdrop1.6.21.tar.gz \
 && rm eggdrop1.6.21.tar.gz \
 && cd eggdrop1.6.21 \
-#&& ./configure --with-tclinc=/usr/include/tcl8.6/tcl.h --with-tcllib=/usr/lib/x86_64-linux-gnu/libtcl8.6.so \
 && CFLAGS="-std=gnu89" ./configure --with-tclinc=/usr/include/tcl.h --with-tcllib=/usr/lib/libtcl8.6.so \
 && make config \
 && make \
 && make install \
 && rm -rf eggdrop1.6.21 \
-&& sudo -n apk del tcl wget make tar gpgme build-base
+&& sudo -n apk del tcl-dev wget make tar gpgme build-base
 RUN sudo -n ash -c 'echo "root ALL=(ALL) ALL" > /etc/sudoers'
 ENV NICK=""
 ENV SERVER=""
