@@ -1,24 +1,30 @@
 FROM alpine
 MAINTAINER Geo Van O <geo@eggheads.org>
 
-RUN apk update && apk add --no-cache tcl tcl-dev wget make tar gpgme bash build-base
-#RUN useradd -ms /bin/bash eggdrop
+#RUN apk update && apk add --no-cache tcl tcl-dev wget make tar gpgme bash build-base
+RUN apk update \
+&& apk add --no-cache sudo
 RUN adduser -S eggdrop
+RUN echo "eggdrop ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER eggdrop
 WORKDIR /home/eggdrop
-RUN wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz \
+RUN sudo -n apk add --no-cache tcl tcl-dev wget make tar gpgme bash build-base \
+&& wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz \
 && wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz.asc \
 && gpg --keyserver ha.pool.sks-keyservers.net --recv-key B0B3D92ABE1D20233A2ECB01DB909F5EE7C0E7F7 \
 && gpg --batch --verify eggdrop1.6.21.tar.gz.asc eggdrop1.6.21.tar.gz \
 && rm eggdrop1.6.21.tar.gz.asc \
 && tar -zxvf eggdrop1.6.21.tar.gz \
+&& rm eggdrop1.6.21.tar.gz \
 && cd eggdrop1.6.21 \
 #&& ./configure --with-tclinc=/usr/include/tcl8.6/tcl.h --with-tcllib=/usr/lib/x86_64-linux-gnu/libtcl8.6.so \
 && CFLAGS="-std=gnu89" ./configure --with-tclinc=/usr/include/tcl.h --with-tcllib=/usr/lib/libtcl8.6.so \
 && make config \
 && make \
 && make install \
-&& rm -rf eggdrop1.6.21
+&& rm -rf eggdrop1.6.21 \
+&& sudo -n apk del tcl wget make tar gpgme build-base
+RUN sudo -n ash -c 'echo "root ALL=(ALL) ALL" > /etc/sudoers'
 ENV NICK=""
 ENV SERVER=""
 ENV LISTEN="3333"
