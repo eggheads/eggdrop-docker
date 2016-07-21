@@ -34,5 +34,6 @@ WORKDIR /home/eggdrop/eggdrop
 RUN mkdir /home/eggdrop/eggdrop/data
 EXPOSE 3333
 ADD entrypoint.sh /home/eggdrop/eggdrop
+ADD docker.tcl /home/eggdrop/eggdrop/scripts
 ENTRYPOINT ["/home/eggdrop/eggdrop/entrypoint.sh"]
 CMD ["eggdrop.conf"]

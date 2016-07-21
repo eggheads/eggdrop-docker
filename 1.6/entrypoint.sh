@@ -36,7 +36,7 @@ if [ "$1" = 'eggdrop.conf' ]; then
     sed -i "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" eggdrop.conf
     sed -i "/set userfile \"LamestBot.user\"/c\set userfile ${USERFILE}" eggdrop.conf
     sed -i "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" eggdrop.conf
-    sed -i "/set realname \"/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" eggdrop.conf
+    sed -i "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" eggdrop.conf
     sed -i '/edit your config file completely like you were told/d' eggdrop.conf
     sed -i '/Please make sure you edit your config file completely/d' eggdrop.conf
   fi
@@ -85,6 +85,8 @@ if [ "$1" = 'eggdrop.conf' ]; then
     sed -i "/set chanfile ${CHANFILE}/c\set chanfile data/${CHANFILE}" eggdrop.conf
   fi
   ln -s /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
+
+  echo "source scripts/docker.tcl" >> eggdrop.conf
 
   ./eggdrop -nt -m $1
 fi
