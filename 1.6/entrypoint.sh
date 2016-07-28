@@ -3,7 +3,7 @@ set -e
 
 if [ "$1" = 'eggdrop.conf' ]; then
   cd /home/eggdrop/eggdrop
-  if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.conf ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
+  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.conf ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
     echo ""
     echo "--------------------------------------------------"
     echo "You have not set one of the required variables."
@@ -66,7 +66,7 @@ if [ "$1" = 'eggdrop.conf' ]; then
   fi
 
   mkdir -p /home/eggdrop/eggdrop/data
-  if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.conf ]; then
+  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.conf ]; then
     echo "Previous Eggdrop config file not detected, creating new persistent data file..."
     mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/
   else
@@ -74,17 +74,17 @@ if [ "$1" = 'eggdrop.conf' ]; then
   fi
   ln -s /home/eggdrop/eggdrop/data/eggdrop.conf /home/eggdrop/eggdrop/eggdrop.conf
 
-  if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.user ]; then
+  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.user ]; then
     echo "Previous Eggdrop user file not detected, creating new persistent data file..."
     sed -i "/set userfile ${USERFILE}/c\set userfile data/${USERFILE}" eggdrop.conf
   fi
-  ln -s /home/eggdrop/eggdrop/data/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
+  ln -sf /home/eggdrop/eggdrop/data/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
 
-  if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.chan ]; then
-    echo "Previous Eggdrop user file not detected, creating new persistent data file..."
+  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.chan ]; then
+    echo "Previous Eggdrop chan file not detected, creating new persistent data file..."
     sed -i "/set chanfile ${CHANFILE}/c\set chanfile data/${CHANFILE}" eggdrop.conf
   fi
-  ln -s /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
+  ln -sf /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
 
   echo "source scripts/docker.tcl" >> eggdrop.conf
 
