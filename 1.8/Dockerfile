@@ -6,14 +6,16 @@ RUN adduser -S eggdrop
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2'
 
-ENV EGGDROP_SHA256 c176534407642f841f81b3609402c7d61dd1999c72f3b679df3f63b14b29bb8c
+ENV EGGDROP_SHA256 40c3e41cece00b3e3741bd1cd92d8e8bf3fd0adee2cad54bcb04cfc26f38f4a0
+ENV EGGDROP_COMMIT 1753372f439849ccc4e6b692f90991282b6daf28
 
 RUN apk add --no-cache tcl tcl-dev wget ca-certificates make tar gpgme bash build-base \
-  && wget https://github.com/eggheads/eggdrop/archive/develop.tar.gz -o develop.tar.gz\
+  && wget https://github.com/eggheads/eggdrop/archive/1753372f439849ccc4e6b692f90991282b6daf28.tar.gz -O develop.tar.gz\
+  && sha256sum develop.tar.gz \
   && echo "$EGGDROP_SHA256  develop.tar.gz" | sha256sum -c - \
   && tar -zxvf develop.tar.gz \
   && rm develop.tar.gz \
-    && ( cd eggdrop-develop \
+    && ( cd eggdrop-$EGGDROP_COMMIT \
     && ./configure --with-tclinc=/usr/include/tcl8.6/tcl.h --with-tcllib=/usr/lib/x86_64-linux-gnu/libtcl8.6.so \
     && make config \
     && make \
@@ -29,7 +31,6 @@ ENV LISTEN="3333"
 ENV OWNER=""
 ENV USERFILE="eggdrop.user"
 ENV CHANFILE="eggdrop.chan"
-ENV FIRSTRUN=""
 
 WORKDIR /home/eggdrop/eggdrop
 EXPOSE 3333
