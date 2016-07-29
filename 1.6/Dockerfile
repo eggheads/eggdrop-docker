@@ -14,11 +14,11 @@ RUN apk add --no-cache tcl tcl-dev wget make tar gpgme bash build-base \
   && rm eggdrop1.6.21.tar.gz.asc \
   && tar -zxvf eggdrop1.6.21.tar.gz \
   && rm eggdrop1.6.21.tar.gz \
-  && ( HOME=/home/eggdrop && cd eggdrop1.6.21 \
+  && ( cd eggdrop1.6.21 \
     && CFLAGS="-std=gnu89" ./configure --with-tclinc=/usr/include/tcl.h --with-tcllib=/usr/lib/libtcl8.6.so \
     && make config \
     && make \
-    && make install ) \
+    && make install DEST=/home/eggdrop/eggdrop ) \
   && rm -rf eggdrop1.6.21 \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \

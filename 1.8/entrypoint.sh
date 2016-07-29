@@ -2,71 +2,83 @@
 set -e
 
 if [ "$1" = 'eggdrop.conf' ]; then
+  # allow the container to be started with `--user`
+  if [ "$(id -u)" = '0' ]; then
+    chown -R eggdrop /home/eggdrop/eggdrop .
+    exec su-exec eggdrop "$BASH_SOURCE" "$@"
+  fi
+
   cd /home/eggdrop/eggdrop
-  if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.conf ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
-    echo ""
-    echo "--------------------------------------------------"
-    echo "You have not set one of the required variables."
-    echo "The following variables must be set via the"
-    echo "-e command line argument in order to run eggdrop"
-    echo "for the first time:"
-    echo ""
-    echo "NICK   - set IRC nickname"
-    echo "SERVER - set IRC server to connect to"
-    echo ""
-    echo "Example:"
-    echo "docker run -ti -e NICK=DockerBot -e SERVER=irc.freenode.net eggdrop"
-    echo ""
-    echo "If you wish to telnet or DCC to your bot, you will"
-    echo "need to expose the docker port to your host by"
-    echo "adding -p 3333:3333 (or whatever port eggdrop is"
-    echo "listening on) to your docker run command."
-    echo ""
-    echo "These variables only need to be used the first"
-    echo "time you run the container- after the first use,"
-    echo "you can edit the config file created, directly."
-    echo "--------------------------------------------------"
-    echo ""
-    exit
+  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.conf ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
+    cat <<EOS >&2
+
+--------------------------------------------------
+You have not set one of the required variables.
+The following variables must be set via the
+-e command line argument in order to run eggdrop
+for the first time:
+
+NICK   - set IRC nickname
+SERVER - set IRC server to connect to
+
+Example:
+docker run -ti -e NICK=DockerBot -e SERVER=irc.freenode.net eggdrop
+
+If you wish to telnet or DCC to your bot, you will
+need to expose the docker port to your host by
+adding -p 3333:3333 (or whatever port eggdrop is
+listening on) to your docker run command.
+
+These variables only need to be used the first
+time you run the container- after the first use,
+you can edit the config file created, directly.
+--------------------------------------------------
+
+EOS
+    exit 1
   else
-    sed -i "/set nick \"Lamestbot\"/c\set nick \"$NICK\"" eggdrop.conf
-    sed -i "/another.example.com:7000:password/d" eggdrop.conf
-    sed -i "/you.need.to.change.this:6667/c\ ${SERVER}" eggdrop.conf
-    sed -i "/#listen 3333 all/c\listen ${LISTEN} all" eggdrop.conf
-    sed -i "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" eggdrop.conf
-    sed -i "/set userfile \"LamestBot.user\"/c\set userfile ${USERFILE}" eggdrop.conf
-    sed -i "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" eggdrop.conf
-    sed -i "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" eggdrop.conf
-    sed -i '/edit your config file completely like you were told/d' eggdrop.conf
-    sed -i '/Please make sure you edit your config file completely/d' eggdrop.conf
+    sed -i \
+      -e "/set nick \"Lamestbot\"/c\set nick \"$NICK\"" \
+      -e "/another.example.com:7000:password/d" \
+      -e "/you.need.to.change.this:6667/c\ ${SERVER}" \
+      -e "/#listen 3333 all/c\listen ${LISTEN} all" \
+      -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" \
+      -e "/set userfile \"LamestBot.user\"/c\set userfile ${USERFILE}" \
+      -e "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" \
+      -e "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" \
+      -e '/edit your config file completely like you were told/d' \
+      -e '/Please make sure you edit your config file completely/d' eggdrop.conf
   fi
 
   if ! mountpoint -q /home/eggdrop/eggdrop/data; then
-    echo ""
-    echo "#####################################################"
-    echo "#####################################################"
-    echo "You did not specify a location on the host machine"
-    echo "to store your data. This means NOTHING will persist"
-    echo "if this docker container is deleted or updated, such"
-    echo "as user lists, chan lists, or ban lists."
-    echo ""
-    echo "In other words, you will likely LOSE YOUR DATA!"
-    echo ""
-    echo "Mounting a datastore on the host system will also"
-    echo "give you easy access to edit your configuration file."
-    echo ""
-    echo "If you wish to add the data store, simply run the"
-    echo "container again, but this time adding the option:"
-    echo "----------------------------------------------------"
-    echo "-v /path/to/your/saved/data/:/home/eggdrop/eggdrop/data"
-    echo "----------------------------------------------------"
-    echo "to your 'docker run' command."
-    echo "####################################################"
-    echo "####################################################"
+    cat <<EOS
+
+#####################################################
+#####################################################
+You did not specify a location on the host machine
+to store your data. This means NOTHING will persist
+if this docker container is deleted or updated, such
+as user lists, chan lists, or ban lists.
+
+In other words, you will likely LOSE YOUR DATA!
+
+Mounting a datastore on the host system will also
+give you easy access to edit your configuration file.
+
+If you wish to add the data store, simply run the
+container again, but this time adding the option:
+----------------------------------------------------
+-v /path/to/your/saved/data/:/home/eggdrop/eggdrop/data
+----------------------------------------------------
+to your 'docker run' command.
+####################################################
+####################################################
+
+EOS
   fi
 
   mkdir -p /home/eggdrop/eggdrop/data
-  if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.conf ]; then
+  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.conf ]; then
     echo "Previous Eggdrop config file not detected, creating new persistent data file..."
     mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/
   else
@@ -74,20 +86,20 @@ if [ "$1" = 'eggdrop.conf' ]; then
   fi
   ln -s /home/eggdrop/eggdrop/data/eggdrop.conf /home/eggdrop/eggdrop/eggdrop.conf
 
-  if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.user ]; then
+  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.user ]; then
     echo "Previous Eggdrop user file not detected, creating new persistent data file..."
     sed -i "/set userfile ${USERFILE}/c\set userfile data/${USERFILE}" eggdrop.conf
   fi
-  ln -s /home/eggdrop/eggdrop/data/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
+  ln -sf /home/eggdrop/eggdrop/data/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
 
-  if ! [ -a /home/eggdrop/eggdrop/data/eggdrop.chan ]; then
-    echo "Previous Eggdrop user file not detected, creating new persistent data file..."
+  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.chan ]; then
+    echo "Previous Eggdrop chan file not detected, creating new persistent data file..."
     sed -i "/set chanfile ${CHANFILE}/c\set chanfile data/${CHANFILE}" eggdrop.conf
   fi
-  ln -s /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
+  ln -sf /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
 
   echo "source scripts/docker.tcl" >> eggdrop.conf
 
-  ./eggdrop -nt -m $1
+  exec ./eggdrop -nt -m $1
 fi
 exec "$@"
