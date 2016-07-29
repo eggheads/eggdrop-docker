@@ -2,7 +2,9 @@ FROM alpine:3.4
 MAINTAINER Geo Van O <geo@eggheads.org>
 
 RUN adduser -S eggdrop
-WORKDIR /home/eggdrop
+
+# grab su-exec for easy step-down from root
+RUN apk add --no-cache 'su-exec>=0.2'
 
 RUN apk add --no-cache tcl tcl-dev wget make tar gpgme bash build-base \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop1.6.21.tar.gz \
@@ -35,6 +37,5 @@ EXPOSE 3333
 COPY entrypoint.sh /home/eggdrop/eggdrop
 COPY docker.tcl /home/eggdrop/eggdrop/scripts/
 
-USER eggdrop
 ENTRYPOINT ["/home/eggdrop/eggdrop/entrypoint.sh"]
 CMD ["eggdrop.conf"]

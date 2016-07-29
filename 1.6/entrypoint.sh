@@ -2,6 +2,12 @@
 set -e
 
 if [ "$1" = 'eggdrop.conf' ]; then
+  # allow the container to be started with `--user`
+  if [ "$(id -u)" = '0' ]; then
+    chown -R eggdrop /home/eggdrop/eggdrop .
+    exec su-exec eggdrop "$BASH_SOURCE" "$@"
+  fi
+
   cd /home/eggdrop/eggdrop
   if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.conf ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
     cat <<EOS >&2
@@ -94,6 +100,6 @@ EOS
 
   echo "source scripts/docker.tcl" >> eggdrop.conf
 
-  ./eggdrop -nt -m $1
+  exec ./eggdrop -nt -m $1
 fi
 exec "$@"
