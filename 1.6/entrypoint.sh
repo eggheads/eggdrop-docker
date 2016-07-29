@@ -42,6 +42,7 @@ EOS
       -e "/another.example.com:7000:password/d" \
       -e "/you.need.to.change.this:6667/c\ ${SERVER}" \
       -e "/#listen 3333 all/c\listen ${LISTEN} all" \
+      -e "s/^#set dns-servers/set dns-servers/" \
       -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" \
       -e "/set userfile \"LamestBot.user\"/c\set userfile ${USERFILE}" \
       -e "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" \

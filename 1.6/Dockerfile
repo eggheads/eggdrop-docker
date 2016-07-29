@@ -30,7 +30,6 @@ ENV LISTEN="3333"
 ENV OWNER=""
 ENV USERFILE="eggdrop.user"
 ENV CHANFILE="eggdrop.chan"
-ENV FIRSTRUN=""
 
 WORKDIR /home/eggdrop/eggdrop
 EXPOSE 3333
