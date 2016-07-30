@@ -20,7 +20,7 @@ RUN apk add --no-cache tcl tcl-dev wget ca-certificates make tar gpgme bash buil
     && make config \
     && make \
     && make install DEST=/home/eggdrop/eggdrop ) \
-  && rm -rf eggdrop-develop \
+  && rm -rf eggdrop-$EGGDROP_COMMIT \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \
   && apk del tcl-dev wget ca-certificates make tar gpgme build-base
