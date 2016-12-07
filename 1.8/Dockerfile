@@ -6,20 +6,20 @@ RUN adduser -S eggdrop
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2'
 
-ENV EGGDROP_SHA256 45e331e85ee825a89b8368107f90e7a6f11be0d9294e55c1d01f54a980813b81
-ENV EGGDROP_COMMIT 9c7160e8271c6d99a22fea980a5b9e9cfa96732f
-
 RUN apk add --no-cache tcl tcl-dev wget ca-certificates make tar gpgme bash build-base openssl openssl-dev\
-  && wget https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz -O develop.tar.gz\
-  && echo "$EGGDROP_SHA256  develop.tar.gz" | sha256sum -c - \
-  && tar -zxvf develop.tar.gz \
-  && rm develop.tar.gz \
-    && ( cd eggdrop-$EGGDROP_COMMIT \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop-1.8.0.tar.gz \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/stable/eggdrop-1.8.0.tar.gz.asc \
+  && gpg --keyserver ha.pool.sks-keyservers.net --recv-key D1A39AFF \
+  && gpg --batch --verify eggdrop-1.8.0.tar.gz.asc eggdrop-1.8.0.tar.gz \
+  && rm eggdrop-1.8.0.tar.gz.asc \
+  && tar -zxvf eggdrop-1.8.0.tar.gz \
+  && rm eggdrop-1.8.0.tar.gz \
+  && ( cd eggdrop-1.8.0 \
     && ./configure \
     && make config \
     && make \
     && make install DEST=/home/eggdrop/eggdrop ) \
-  && rm -rf eggdrop-$EGGDROP_COMMIT \
+  && rm -rf eggdrop-1.8.0 \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \
   && apk del tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev
