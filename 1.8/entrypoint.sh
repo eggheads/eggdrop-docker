@@ -104,7 +104,9 @@ EOS
     ln -sf /home/eggdrop/eggdrop/data/${CHANFILE} /home/eggdrop/eggdrop/${CHANFILE}
   fi
 
-  echo "source scripts/docker.tcl" >> eggdrop.conf
+  echo "if {[catch {source scripts/docker.tcl} err]} {" >> eggdrop.conf
+  echo "  putlog \"INFO: Could not load docker.tcl file\"" >> eggdrop.conf
+  echo "}" >> eggdrop.conf
 
   exec ./eggdrop -nt -m $1
 fi
