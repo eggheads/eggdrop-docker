@@ -8,9 +8,7 @@ if [[ "$1" = *".conf" ]]; then
     exec su-exec eggdrop "$BASH_SOURCE" "$@"
   fi
 
-  if [ -z ${CONFIG} ]; then
-    CONFIG="eggdrop.conf"
-  fi
+  CONFIG=$1
 
   cd /home/eggdrop/eggdrop
   if ! [ -e /home/eggdrop/eggdrop/data/${CONFIG} ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
@@ -108,6 +106,6 @@ EOS
   echo "  putlog \"INFO: Could not load docker.tcl file\"" >> eggdrop.conf
   echo "}" >> eggdrop.conf
 
-  exec ./eggdrop -nt -m $1
+  exec ./eggdrop -nt -m ${CONFIG}
 fi
 exec "$@"
