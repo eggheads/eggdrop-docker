@@ -1,15 +1,19 @@
 #!/bin/bash
 set -e
 
-if [ "$1" = 'eggdrop.conf' ]; then
+if [[ "$1" = *".conf" ]]; then
   # allow the container to be started with `--user`
   if [ "$(id -u)" = '0' ]; then
     chown -R eggdrop /home/eggdrop/eggdrop .
     exec su-exec eggdrop "$BASH_SOURCE" "$@"
   fi
 
+  if [ -z ${CONFIG} ]; then
+    CONFIG="eggdrop.conf"
+  fi
+
   cd /home/eggdrop/eggdrop
-  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.conf ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
+  if ! [ -e /home/eggdrop/eggdrop/data/${CONFIG} ] && ([ -z ${SERVER} ] || [ -z ${NICK} ]); then
     cat <<EOS >&2
 
 --------------------------------------------------
@@ -78,26 +82,27 @@ to your 'docker run' command.
 EOS
   fi
 
+### Check if previous config file is present and, if not, create one
   mkdir -p /home/eggdrop/eggdrop/data
-  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.conf ]; then
+  if ! [ -e /home/eggdrop/eggdrop/data/${CONFIG} ]; then
     echo "Previous Eggdrop config file not detected, creating new persistent data file..."
-    mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/
+    mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/${CONFIG}
   else
     rm /home/eggdrop/eggdrop/eggdrop.conf
   fi
-  ln -s /home/eggdrop/eggdrop/data/eggdrop.conf /home/eggdrop/eggdrop/eggdrop.conf
+  ln -s /home/eggdrop/eggdrop/data/${CONFIG} /home/eggdrop/eggdrop/${CONFIG}
 
-  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.user ]; then
-    echo "Previous Eggdrop user file not detected, creating new persistent data file..."
-    sed -i "/set userfile ${USERFILE}/c\set userfile data/${USERFILE}" eggdrop.conf
+### Check for existing userfile and create link to data dir
+  USERFILE=$(grep "set userfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
+  if ! [ -e /home/eggdrop/eggdrop/${USERFILE} ]; then
+   ln -sf /home/eggdrop/eggdrop/data/${USERFILE} /home/eggdrop/eggdrop/${USERFILE}
   fi
-  ln -sf /home/eggdrop/eggdrop/data/eggdrop.user /home/eggdrop/eggdrop/eggdrop.user
 
-  if ! [ -e /home/eggdrop/eggdrop/data/eggdrop.chan ]; then
-    echo "Previous Eggdrop chan file not detected, creating new persistent data file..."
-    sed -i "/set chanfile ${CHANFILE}/c\set chanfile data/${CHANFILE}" eggdrop.conf
+### Check for existing channel file and create link to data dir
+  CHANFILE=$(grep "set chanfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
+  if ! [ -e /home/eggdrop/eggdrop/${CHANFILE} ]; then
+    ln -sf /home/eggdrop/eggdrop/data/${CHANFILE} /home/eggdrop/eggdrop/${CHANFILE}
   fi
-  ln -sf /home/eggdrop/eggdrop/data/eggdrop.chan /home/eggdrop/eggdrop/eggdrop.chan
 
   echo "source scripts/docker.tcl" >> eggdrop.conf
 
