@@ -38,19 +38,6 @@ you can edit the config file created, directly.
 
 EOS
     exit 1
-  else
-    sed -i \
-      -e "/set nick \"Lamestbot\"/c\set nick \"$NICK\"" \
-      -e "/another.example.com:7000:password/d" \
-      -e "/you.need.to.change.this:6667/c\ ${SERVER}" \
-      -e "/#listen 3333 all/c\listen ${LISTEN} all" \
-      -e "s/^#set dns-servers/set dns-servers/" \
-      -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" \
-      -e "/set userfile \"LamestBot.user\"/c\set userfile ${USERFILE}" \
-      -e "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" \
-      -e "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" \
-      -e '/edit your config file completely like you were told/d' \
-      -e '/Please make sure you edit your config file completely/d' eggdrop.conf
   fi
 
   if ! mountpoint -q /home/eggdrop/eggdrop/data; then
@@ -84,11 +71,26 @@ EOS
   mkdir -p /home/eggdrop/eggdrop/data
   if ! [ -e /home/eggdrop/eggdrop/data/${CONFIG} ]; then
     echo "Previous Eggdrop config file not detected, creating new persistent data file..."
+    sed -i \
+      -e "/set nick \"Lamestbot\"/c\set nick \"$NICK\"" \
+      -e "/another.example.com:7000:password/d" \
+      -e "/you.need.to.change.this:6667/c\ ${SERVER}" \
+      -e "/#listen 3333 all/c\listen ${LISTEN} all" \
+      -e "s/^#set dns-servers/set dns-servers/" \
+      -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" \
+      -e "/set userfile \"LamestBot.user\"/c\set userfile ${USERFILE}" \
+      -e "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" \
+      -e "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" \
+      -e '/edit your config file completely like you were told/d' \
+      -e '/Please make sure you edit your config file completely/d' eggdrop.conf
+    echo "if {[catch {source scripts/docker.tcl} err]} {" >> ${CONFIG}
+    echo "  putlog \"INFO: Could not load docker.tcl file\"" >> ${CONFIG}
+    echo "}" >> ${CONFIG}
     mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/${CONFIG}
   else
     rm /home/eggdrop/eggdrop/eggdrop.conf
   fi
-  ln -s /home/eggdrop/eggdrop/data/${CONFIG} /home/eggdrop/eggdrop/${CONFIG}
+  ln -sf /home/eggdrop/eggdrop/data/${CONFIG} /home/eggdrop/eggdrop/${CONFIG}
 
 ### Check for existing userfile and create link to data dir
   USERFILE=$(grep "set userfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
@@ -102,10 +104,7 @@ EOS
     ln -sf /home/eggdrop/eggdrop/data/${CHANFILE} /home/eggdrop/eggdrop/${CHANFILE}
   fi
 
-  echo "if {[catch {source scripts/docker.tcl} err]} {" >> eggdrop.conf
-  echo "  putlog \"INFO: Could not load docker.tcl file\"" >> eggdrop.conf
-  echo "}" >> eggdrop.conf
-
   exec ./eggdrop -nt -m ${CONFIG}
+  fi
 fi
 exec "$@"
