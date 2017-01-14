@@ -105,6 +105,5 @@ EOS
   fi
 
   exec ./eggdrop -nt -m ${CONFIG}
-  fi
 fi
 exec "$@"
