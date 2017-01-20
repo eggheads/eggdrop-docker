@@ -88,7 +88,9 @@ EOS
     echo "}" >> ${CONFIG}
     mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/${CONFIG}
   else
-    rm /home/eggdrop/eggdrop/eggdrop.conf
+    if [ -e /home/eggdrop/eggdrop/eggdrop.conf ]; then
+      rm /home/eggdrop/eggdrop/eggdrop.conf
+    fi
   fi
   ln -sf /home/eggdrop/eggdrop/data/${CONFIG} /home/eggdrop/eggdrop/${CONFIG}
 
