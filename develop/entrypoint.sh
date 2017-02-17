@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+if [ -z $LISTEN ]; then
+  LISTEN=3333
+fi
+
 if [[ "$1" = *".conf" ]]; then
   # allow the container to be started with `--user`
   if [ "$(id -u)" = '0' ]; then
@@ -78,8 +82,8 @@ EOS
       -e "/#listen 3333 all/c\listen ${LISTEN} all" \
       -e "s/^#set dns-servers/set dns-servers/" \
       -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" \
-      -e "/set userfile \"LamestBot.user\"/c\set userfile ${USERFILE}" \
-      -e "/set chanfile \"LamestBot.chan\"/c\set chanfile ${CHANFILE}" \
+      -e "/set userfile \"LamestBot.user\"/c\set userfile data/${USERFILE}" \
+      -e "/set chanfile \"LamestBot.chan\"/c\set chanfile data/${CHANFILE}" \
       -e "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" \
       -e '/edit your config file completely like you were told/d' \
       -e '/Please make sure you edit your config file completely/d' eggdrop.conf
@@ -96,15 +100,15 @@ EOS
 
 ### Check for existing userfile and create link to data dir
   USERFILE=$(grep "set userfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
-  if ! [ -e /home/eggdrop/eggdrop/${USERFILE} ]; then
-   ln -sf /home/eggdrop/eggdrop/data/${USERFILE} /home/eggdrop/eggdrop/${USERFILE}
-  fi
+#  if ! [ -e /home/eggdrop/eggdrop/${USERFILE} ]; then
+#    ln -sf /home/eggdrop/eggdrop/data/${USERFILE} /home/eggdrop/eggdrop/${USERFILE}
+#  fi
 
 ### Check for existing channel file and create link to data dir
   CHANFILE=$(grep "set chanfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
-  if ! [ -e /home/eggdrop/eggdrop/${CHANFILE} ]; then
-    ln -sf /home/eggdrop/eggdrop/data/${CHANFILE} /home/eggdrop/eggdrop/${CHANFILE}
-  fi
+#  if ! [ -e /home/eggdrop/eggdrop/${CHANFILE} ]; then
+#    ln -sf /home/eggdrop/eggdrop/data/${CHANFILE} /home/eggdrop/eggdrop/${CHANFILE}
+#  fi
 
   exec ./eggdrop -nt -m ${CONFIG}
 fi
