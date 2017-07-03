@@ -101,6 +101,20 @@ EOS
 
   echo "source scripts/docker.tcl" >> eggdrop.conf
 
+### Remove previous pid file, if present
+  PID=$(grep "set pidfile" ${CONFIG} |awk '{print $3}')
+  if [[ $PID == \#* ]]; then
+    PID=$(grep "set botnet-nick" ${CONFIG} |awk '{print $3}')
+    if [[ $PID == \#* ]]; then
+      PID=$(grep "set nick" ${CONFIG} |awk '{print $3}')
+    fi
+  fi
+  if [ -e "$PID" ]; then
+    PID="${PID//\"}"
+    echo "Found $PID, removing..."
+    rm $PID;
+  fi
+
   exec ./eggdrop -nt -m $1
 fi
 exec "$@"

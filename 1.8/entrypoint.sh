@@ -100,15 +100,23 @@ EOS
 
 ### Check for existing userfile and create link to data dir
   USERFILE=$(grep "set userfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
-#  if ! [ -e /home/eggdrop/eggdrop/${USERFILE} ]; then
-#    ln -sf /home/eggdrop/eggdrop/data/${USERFILE} /home/eggdrop/eggdrop/${USERFILE}
-#  fi
 
 ### Check for existing channel file and create link to data dir
   CHANFILE=$(grep "set chanfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
-#  if ! [ -e /home/eggdrop/eggdrop/${CHANFILE} ]; then
-#    ln -sf /home/eggdrop/eggdrop/data/${CHANFILE} /home/eggdrop/eggdrop/${CHANFILE}
-#  fi
+
+### Remove previous pid file, if present
+  PID=$(grep "set pidfile" ${CONFIG} |awk '{print $3}')
+  if [[ $PID == \#* ]]; then
+    PID=$(grep "set botnet-nick" ${CONFIG} |awk '{print $3}')
+    if [[ $PID == \#* ]]; then
+      PID=$(grep "set nick" ${CONFIG} |awk '{print $3}')
+    fi
+  fi
+  if [ -e "$PID" ]; then
+    PID="${PID//\"}"
+    echo "Found $PID, removing..."
+    rm $PID;
+  fi
 
   exec ./eggdrop -nt -m ${CONFIG}
 fi
