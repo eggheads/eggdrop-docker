@@ -98,11 +98,19 @@ EOS
   fi
   ln -sf /home/eggdrop/eggdrop/data/${CONFIG} /home/eggdrop/eggdrop/${CONFIG}
 
-### Check for existing userfile and create link to data dir
+### Check for existing userfile and create link to data dir as backup
   USERFILE=$(grep "set userfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
+  if [ -e /home/eggdrop/eggdrop/data/${USERFILE} ]; then
+    ln -sf /home/eggdrop/eggdrop/data/${USERFILE} /home/eggdrop/eggdrop/${USERFILE}
+  fi
 
-### Check for existing channel file and create link to data dir
+
+### Check for existing channel file and create link to data dir as backup
   CHANFILE=$(grep "set chanfile " ${CONFIG} |cut -d " " -f 3|cut -d "\"" -f 2)
+  if [ -e /home/eggdrop/eggdrop/data/${CHANFILE} ]; then
+    ln -sf /home/eggdrop/eggdrop/data/${CHANFILE} /home/eggdrop/eggdrop/${CHANFILE}
+  fi
+
 
 ### Remove previous pid file, if present
   PID=$(grep "set pidfile" ${CONFIG} |awk '{print $3}')
