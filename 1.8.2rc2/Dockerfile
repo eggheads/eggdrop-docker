@@ -7,19 +7,19 @@ RUN adduser -S eggdrop
 RUN apk add --no-cache 'su-exec>=0.2'
 
 RUN apk add --no-cache tcl tcl-dev wget ca-certificates make tar gpgme bash build-base openssl openssl-dev\
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.8/eggdrop-1.8.2rc1.tar.gz \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.8/eggdrop-1.8.2rc1.tar.gz.asc \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.8/eggdrop-1.8.2rc2.tar.gz \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.8/eggdrop-1.8.2rc2.tar.gz.asc \
   && gpg --keyserver ha.pool.sks-keyservers.net --recv-key E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
-  && gpg --batch --verify eggdrop-1.8.2rc1.tar.gz.asc eggdrop-1.8.2rc1.tar.gz \
-  && rm eggdrop-1.8.2rc1.tar.gz.asc \
-  && tar -zxvf eggdrop-1.8.2rc1.tar.gz \
-  && rm eggdrop-1.8.2rc1.tar.gz \
-  && ( cd eggdrop-1.8.2 \
+  && gpg --batch --verify eggdrop-1.8.2rc2.tar.gz.asc eggdrop-1.8.2rc2.tar.gz \
+  && rm eggdrop-1.8.2rc2.tar.gz.asc \
+  && tar -zxvf eggdrop-1.8.2rc2.tar.gz \
+  && rm eggdrop-1.8.2rc2.tar.gz \
+  && ( cd eggdrop-1.8.2rc2 \
     && ./configure \
     && make config \
     && make \
     && make install DEST=/home/eggdrop/eggdrop ) \
-  && rm -rf eggdrop-1.8.2 \
+  && rm -rf eggdrop-1.8.2rc2 \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \
   && apk del tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev
