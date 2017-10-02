@@ -9,7 +9,8 @@ RUN apk add --no-cache 'su-exec>=0.2'
 ENV EGGDROP_SHA256 6a9b16413a9afa4e7f79b2c26a7ad03d181dc9cdb096e9e321725f1ae3abc5a6
 ENV EGGDROP_COMMIT 6306685b1e6f67211f6106e9c5706063ce5433d6
 
-RUN apk add --no-cache tcl tcl-dev wget ca-certificates make tar gpgme bash build-base openssl openssl-dev \
+RUN apk --update add --no-cache tcl bash openssl
+RUN apk --update add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev \
   && wget "https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz" -O develop.tar.gz \
   && echo "$EGGDROP_SHA256  develop.tar.gz" | sha256sum -c - \
   && tar -zxvf develop.tar.gz \
@@ -22,7 +23,7 @@ RUN apk add --no-cache tcl tcl-dev wget ca-certificates make tar gpgme bash buil
   && rm -rf eggdrop-$EGGDROP_COMMIT \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \
-  && apk del tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev
+  && apk del egg-deps
 
 ENV NICK=""
 ENV SERVER=""
