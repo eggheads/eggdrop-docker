@@ -126,6 +126,6 @@ EOS
     rm $PID;
   fi
 
-  exec ./eggdrop -nt -m ${CONFIG}
+  exec ./eggdrop -n -m ${CONFIG}
 fi
 exec "$@"
