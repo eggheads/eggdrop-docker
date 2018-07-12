@@ -15,6 +15,9 @@ RUN apk add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar 
   && rm eggdrop-1.8.3.tar.gz.asc \
   && tar -zxvf eggdrop-1.8.3.tar.gz \
   && rm eggdrop-1.8.3.tar.gz \
+  && wget http://git.savannah.gnu.org/cgit/config.git/plain/config.guess \
+  && wget http://git.savannah.gnu.org/cgit/config.git/plain/config.sub \
+  && mv config.guess config.sub eggdrop-1.8.3/misc \
   && ( cd eggdrop-1.8.3 \
     && ./configure \
     && make config \
