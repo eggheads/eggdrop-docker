@@ -10,7 +10,10 @@ RUN apk add --no-cache tcl bash openssl
 RUN apk add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.8/eggdrop-1.8.3.tar.gz \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.8/eggdrop-1.8.3.tar.gz.asc \
-  && gpg --keyserver ha.pool.sks-keyservers.net --recv-key E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
+  && ( gpg --keyserver Zpool.sks-keyservers.net --recv-keys E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
+    || gpg --keyserver pgp.mit.edu --recv-keys E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
+    || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
+    || gpg --keyserver keyserver.pgp.com --recv-keys E01C240484DE7DBE190FE141E7667DE1D1A39AFF ) \
   && gpg --batch --verify eggdrop-1.8.3.tar.gz.asc eggdrop-1.8.3.tar.gz \
   && rm eggdrop-1.8.3.tar.gz.asc \
   && tar -zxvf eggdrop-1.8.3.tar.gz \
