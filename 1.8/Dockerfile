@@ -18,10 +18,10 @@ RUN apk add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar 
   && tar -zxvf eggdrop-1.8.3.tar.gz \
   && rm eggdrop-1.8.3.tar.gz \
   && ( cd eggdrop-1.8.3 \
-  && ./configure \
-  && make config \
-  && make \
-  && make install DEST=/home/eggdrop/eggdrop ) \
+    && ./configure \
+    && make config \
+    && make \
+    && make install DEST=/home/eggdrop/eggdrop ) \
   && rm -rf eggdrop-1.8.3 \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \
