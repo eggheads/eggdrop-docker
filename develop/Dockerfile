@@ -6,8 +6,8 @@ RUN adduser -S eggdrop
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2'
 
-ENV EGGDROP_SHA256 4e7fc37600dea432a905ccf56c15ef7bb46a3724786eeb08a4bbc1736595214e
-ENV EGGDROP_COMMIT 1b58814e2a4c9ca73c7f6c1b9301681cba8d9af2
+ENV EGGDROP_SHA256 12f560ad31e27f1ad631964f6d4ca43e97de6b11c35d4b733a44d21216d83bb4
+ENV EGGDROP_COMMIT 7a490c534fd53af99cbf33a85d907785e9156629
 
 RUN apk --update add --no-cache tcl bash openssl
 RUN apk --update add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev \
