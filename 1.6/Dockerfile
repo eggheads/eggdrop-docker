@@ -7,23 +7,35 @@ RUN adduser -S eggdrop
 RUN apk add --no-cache 'su-exec>=0.2'
 
 RUN apk add --no-cache tcl bash
-RUN apk add --no-cache --virtual egg-deps tcl-dev wget make tar gpgme build-base \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.6/eggdrop1.6.21.tar.gz \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.6/eggdrop1.6.21.tar.gz.asc \
-  && gpg --keyserver ha.pool.sks-keyservers.net --recv-key B0B3D92ABE1D20233A2ECB01DB909F5EE7C0E7F7 \
-  && gpg --batch --verify eggdrop1.6.21.tar.gz.asc eggdrop1.6.21.tar.gz \
-  && rm eggdrop1.6.21.tar.gz.asc \
-  && tar -zxvf eggdrop1.6.21.tar.gz \
-  && rm eggdrop1.6.21.tar.gz \
-  && ( cd eggdrop1.6.21 \
-    && CFLAGS="-std=gnu89" ./configure --with-tclinc=/usr/include/tcl.h --with-tcllib=/usr/lib/libtcl8.6.so \
+RUN apk add --no-cache --virtual \
+  egg-deps \
+  tcl-dev \
+  wget \
+  make \
+  tar \
+  gpgme \
+  build-base
+
+RUN wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.6/eggdrop1.6.21.tar.gz
+RUN wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.6/eggdrop1.6.21.tar.gz.asc
+RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-key B0B3D92ABE1D20233A2ECB01DB909F5EE7C0E7F7
+RUN gpg --batch --verify eggdrop1.6.21.tar.gz.asc eggdrop1.6.21.tar.gz
+RUN rm eggdrop1.6.21.tar.gz.asc
+RUN tar -zxvf eggdrop1.6.21.tar.gz
+RUN rm eggdrop1.6.21.tar.gz
+
+WORKDIR /eggdrop1.6.21
+ENV CFLAGS="-std=gnu89"
+RUN ./configure --with-tclinc=/usr/include/tcl.h --with-tcllib=/usr/lib/libtcl8.6.so \
     && make config \
     && make \
-    && make install DEST=/home/eggdrop/eggdrop ) \
-  && rm -rf eggdrop1.6.21 \
-  && mkdir /home/eggdrop/eggdrop/data \
-  && chown -R eggdrop /home/eggdrop/eggdrop \
-  && apk del egg-deps
+    && make install DEST=/home/eggdrop/eggdrop
+
+WORKDIR /home/eggdrop/eggdrop
+RUN rm -rf eggdrop1.6.21
+RUN mkdir /home/eggdrop/eggdrop/data
+RUN chown -R eggdrop /home/eggdrop/eggdrop
+RUN apk del egg-deps
 
 ENV NICK=""
 ENV SERVER=""

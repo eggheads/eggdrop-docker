@@ -10,20 +10,32 @@ ENV EGGDROP_SHA256 b34d8702f2429882c15f80274c146a5f2859326811eb9b2d272174a10bc52
 ENV EGGDROP_COMMIT 9711e38ef62ae4d4269a803f7bd41480f61e044c
 
 RUN apk --update add --no-cache tcl bash openssl
-RUN apk --update add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev \
-  && wget "https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz" -O develop.tar.gz \
-  && echo "$EGGDROP_SHA256  develop.tar.gz" | sha256sum -c - \
-  && tar -zxvf develop.tar.gz \
-  && rm develop.tar.gz \
-    && ( cd eggdrop-$EGGDROP_COMMIT \
-    && ./configure \
+RUN apk --update add --no-cache --virtual \
+  egg-deps \
+  tcl-dev \
+  wget \
+  ca-certificates \
+  make \
+  tar \
+  gpgme \
+  build-base \
+  openssl-dev
+
+RUN wget "https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz" -O develop.tar.gz
+RUN echo "$EGGDROP_SHA256  develop.tar.gz" | sha256sum -c -
+RUN tar -zxvf develop.tar.gz
+RUN rm develop.tar.gz
+WORKDIR /eggdrop-$EGGDROP_COMMIT
+RUN ./configure \
     && make config \
     && make \
-    && make install DEST=/home/eggdrop/eggdrop ) \
-  && rm -rf eggdrop-$EGGDROP_COMMIT \
-  && mkdir /home/eggdrop/eggdrop/data \
-  && chown -R eggdrop /home/eggdrop/eggdrop \
-  && apk del egg-deps
+    && make install DEST=/home/eggdrop/eggdrop
+
+WORKDIR /home/eggdrop/eggdrop
+RUN rm -rf eggdrop-$EGGDROP_COMMIT
+RUN mkdir /home/eggdrop/eggdrop/data
+RUN chown -R eggdrop /home/eggdrop/eggdrop
+RUN apk del egg-deps
 
 ENV NICK=""
 ENV SERVER=""
