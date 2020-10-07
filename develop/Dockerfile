@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM alpine:3.11 as build
 MAINTAINER Geo Van O <geo@eggheads.org>
 
 RUN adduser -S eggdrop
@@ -37,6 +37,9 @@ RUN mkdir /home/eggdrop/eggdrop/data
 RUN chown -R eggdrop /home/eggdrop/eggdrop
 RUN apk del egg-deps
 
+FROM alpine:3.11
+RUN adduser -S eggdrop
+
 ENV NICK=""
 ENV SERVER=""
 ENV LISTEN="3333"
@@ -44,10 +47,13 @@ ENV OWNER=""
 ENV USERFILE="eggdrop.user"
 ENV CHANFILE="eggdrop.chan"
 
-WORKDIR /home/eggdrop/eggdrop
 EXPOSE 3333
+RUN apk add --no-cache tcl bash openssl 'su-exec>=0.2'
+RUN mkdir /home/eggdrop/eggdrop
+COPY --from=build /home/eggdrop/eggdrop /home/eggdrop/eggdrop
+
 COPY entrypoint.sh /home/eggdrop/eggdrop
 COPY docker.tcl /home/eggdrop/eggdrop/scripts/
-
+WORKDIR /home/eggdrop/eggdrop
 ENTRYPOINT ["/home/eggdrop/eggdrop/entrypoint.sh"]
 CMD ["eggdrop.conf"]
