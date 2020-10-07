@@ -54,7 +54,9 @@ ENV CHANFILE="eggdrop.chan"
 EXPOSE 3333
 RUN apk add --no-cache tcl bash openssl 'su-exec>=0.2'
 RUN mkdir /home/eggdrop/eggdrop
-COPY --from=build /home/eggdrop/eggdrop /home/eggdrop/eggdrop
+COPY --from=build /home/eggdrop/eggdrop/eggdrop* /home/eggdrop/eggdrop/
+COPY --from=build /home/eggdrop/eggdrop/data /home/eggdrop/eggdrop/
+COPY --from=build /home/eggdrop/eggdrop/modules* /home/eggdrop/eggdrop/
 
 COPY entrypoint.sh /home/eggdrop/eggdrop
 COPY docker.tcl /home/eggdrop/eggdrop/scripts/
