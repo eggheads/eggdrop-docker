@@ -77,8 +77,7 @@ EOS
     echo "Previous Eggdrop config file not detected, creating new persistent data file..."
     sed -i \
       -e "/set nick \"Lamestbot\"/c\set nick \"$NICK\"" \
-      -e "/another.example.com:7000:password/d" \
-      -e "/you.need.to.change.this:6667/c\ ${SERVER}" \
+      -e "/server add/d" \
       -e "/#listen 3333 all/c\listen ${LISTEN} all" \
       -e "s/^#set dns-servers/set dns-servers/" \
       -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" \
@@ -87,6 +86,7 @@ EOS
       -e "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" \
       -e '/edit your config file completely like you were told/d' \
       -e '/Please make sure you edit your config file completely/d' eggdrop.conf
+    echo "server add ${SERVER}" >> ${CONFIG}
     echo "if {[catch {source scripts/docker.tcl} err]} {" >> ${CONFIG}
     echo "  putlog \"INFO: Could not load docker.tcl file\"" >> ${CONFIG}
     echo "}" >> ${CONFIG}
@@ -126,6 +126,6 @@ EOS
     rm $PID;
   fi
 
-  exec ./eggdrop -nt -m ${CONFIG}
+  exec ./eggdrop -t -m ${CONFIG}
 fi
 exec "$@"
