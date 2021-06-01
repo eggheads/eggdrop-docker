@@ -78,7 +78,7 @@ EOS
     sed -i \
       -e "/set nick \"Lamestbot\"/c\set nick \"$NICK\"" \
       -e "/another.example.com 7000:password/d" \
-      -e "/you.need.to.change.this 6667/c\addserver ${SERVER}" \
+      -e "/you.need.to.change.this 6667/c\server add ${SERVER}" \
       -e "/#listen 3333 all/c\listen ${LISTEN} all" \
       -e "s/^#set dns-servers/set dns-servers/" \
       -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" \
