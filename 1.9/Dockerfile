@@ -5,7 +5,6 @@ RUN adduser -S eggdrop
 
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2'
-RUN sed -i -e 's/^root::/root:!:/' /etc/shadow
 
 RUN apk add --no-cache tcl bash openssl
 RUN apk add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev \
