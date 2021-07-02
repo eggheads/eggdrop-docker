@@ -6,7 +6,7 @@ RUN adduser -S eggdrop
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2'
 
-RUN apk add --no-cache tcl bash openssl
+RUN apk add --no-cache tcl bash openssl sqlite-tcl mariadb mariadb-connector-c-dev tcl-tls
 RUN apk add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar gpgme build-base openssl-dev \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.1.tar.gz \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.1.tar.gz.asc \
@@ -24,7 +24,16 @@ RUN apk add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar 
     && make install DEST=/home/eggdrop/eggdrop ) \
   && rm -rf eggdrop-1.9.1 \
   && mkdir /home/eggdrop/eggdrop/data \
-  && chown -R eggdrop /home/eggdrop/eggdrop \
+  && chown -R eggdrop /home/eggdrop/eggdrop
+
+RUN wget http://www.xdobry.de/mysqltcl/mysqltcl-3.052.tar.gz \
+  && tar -zxvf mysqltcl-3.052.tar.gz \
+  && rm mysqltcl-3.052.tar.gz \
+    && ( cd mysqltcl-3.052 \
+    && ./configure \
+    && make \
+    && make install ) \
+  && rm -rf mysqltcl-3.052 \
   && apk del egg-deps
 
 ENV NICK=""
