@@ -31,6 +31,7 @@ ENV LISTEN="3333"
 ENV OWNER=""
 ENV USERFILE="eggdrop.user"
 ENV CHANFILE="eggdrop.chan"
+ENV CHANNELS=""
 
 WORKDIR /home/eggdrop/eggdrop
 EXPOSE 3333

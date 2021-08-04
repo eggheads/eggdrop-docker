@@ -90,6 +90,12 @@ EOS
     echo "if {[catch {source scripts/docker.tcl} err]} {" >> ${CONFIG}
     echo "  putlog \"INFO: Could not load docker.tcl file\"" >> ${CONFIG}
     echo "}" >> ${CONFIG}
+    # CHANNELS 
+    # Example: -e CHANNELS=#Eggdrop,#eggheads
+    export IFS=","
+    for Channel in ${CHANNELS}; do
+      echo "channel add ${Channel} {}" >> ${CONFIG}
+    done
     mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/${CONFIG}
   else
     if [ -e /home/eggdrop/eggdrop/eggdrop.conf ]; then
