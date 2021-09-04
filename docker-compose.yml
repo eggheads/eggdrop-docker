@@ -1,0 +1,25 @@
+version: '3.1'
+
+services:
+  eggdrop:
+    image: eggdrop:1.9
+### If running for the first time without providing your own config, you
+### probably want to set these variables
+#    environment: 
+#     - SERVER=add.your.irc.server
+#     - NICK=LamestBot
+### Make this match your listen setting in the config
+    ports:
+     - "3333:3333"
+### Change this to the path with your config and user/channel files
+    volumes:
+     - /changethispart/data/:/home/eggdrop/eggdrop/data/
+### If you want to add scripts, put them here. Don't mount to /scripts because
+### it will overwrite the ones that are already used. Make sure you use 
+### 'source scripts2/foo.tcl' as the path in the config.
+#     -/changethispart/scripts:/home/eggdrop/eggdrop/scripts2
+### Enter config name, if not eggdrop.conf
+#    command: LeafBlower.conf
+    stdin_open: true
+    tty: true
+    restart: always
