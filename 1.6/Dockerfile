@@ -8,8 +8,8 @@ RUN apk add --no-cache 'su-exec>=0.2'
 
 RUN apk add --no-cache tcl bash
 RUN apk add --no-cache --virtual egg-deps tcl-dev wget make tar gpgme build-base \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.6/eggdrop1.6.21.tar.gz \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.6/eggdrop1.6.21.tar.gz.asc \
+  && wget https://ftp.eggheads.org/pub/eggdrop/source/1.6/eggdrop1.6.21.tar.gz \
+  && wget https://ftp.eggheads.org/pub/eggdrop/source/1.6/eggdrop1.6.21.tar.gz.asc \
   && gpg --keyserver ha.pool.sks-keyservers.net --recv-key B0B3D92ABE1D20233A2ECB01DB909F5EE7C0E7F7 \
   && gpg --batch --verify eggdrop1.6.21.tar.gz.asc eggdrop1.6.21.tar.gz \
   && rm eggdrop1.6.21.tar.gz.asc \
