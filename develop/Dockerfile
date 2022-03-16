@@ -21,7 +21,7 @@ RUN apk --update add --no-cache --virtual egg-deps wget ca-certificates make tar
     && make \
     && make install ) \
   && wget "https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz" -O develop.tar.gz \
-  && echo "$EGGDROP_SHA256 develop.tar.gz" | sha256sum -c - \
+  && echo "$EGGDROP_SHA256 *develop.tar.gz" | sha256sum -c - \
   && tar -zxf develop.tar.gz \
   && rm develop.tar.gz \
     && ( cd eggdrop-$EGGDROP_COMMIT \
