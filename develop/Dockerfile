@@ -10,7 +10,7 @@ ENV EGGDROP_SHA256 34915a9bf1870bb3759c68520df62443ba45e01558a53c991d2fb03db9b4e
 ENV EGGDROP_COMMIT 47962f7f15a1840b3f3c9ad1a6c247647d16de56
 
 RUN apk --update add --no-cache bash openssl
-RUN apk --update add --no-cache --virtual egg-deps wget ca-certificates make tar gpgme build-base openssl-dev \
+RUN apk --update add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev \
   && wget "https://prdownloads.sourceforge.net/tcl/tcl8.6.12-src.tar.gz" -O tcl8.6.12-src.tar.gz \
   && tar -zxf tcl8.6.12-src.tar.gz \
   && ( cd tcl8.6.12 \
