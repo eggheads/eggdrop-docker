@@ -87,10 +87,12 @@ EOS
       -e "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" \
       -e '/edit your config file completely like you were told/d' \
       -e '/Please make sure you edit your config file completely/d' eggdrop.conf
-    echo "if {[catch {source scripts/docker.tcl} err]} {" >> ${CONFIG}
-    echo "  putlog \"INFO: Could not load docker.tcl file\"" >> ${CONFIG}
-    echo "}" >> ${CONFIG}
-    mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/${CONFIG}
+      echo "server add ${SERVER}" >> eggdrop.conf
+      echo "if {[catch {source scripts/docker.tcl} err]} {" >> eggdrop.conf
+      echo "  putlog \"INFO: Could not load docker.tcl file\"" >> eggdrop.conf
+      echo "  putlog \"Error: \$err\"" >> eggdrop.conf
+      echo "}" >> eggdrop.conf
+      mv /home/eggdrop/eggdrop/eggdrop.conf /home/eggdrop/eggdrop/data/${CONFIG}
   else
     if [ -e /home/eggdrop/eggdrop/eggdrop.conf ]; then
       rm /home/eggdrop/eggdrop/eggdrop.conf

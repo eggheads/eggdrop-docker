@@ -25,3 +25,33 @@ proc nag_owner {hand idx} {
     putlog "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
   }
 }
+
+### Add user from host env variable
+if {![countusers]} {
+  if {[info exists ::env(EGGOWNER)]} {
+    if {![info exists ::env(EGGOWNER_PASS)]} {
+      putlog "* ERROR: Owner handle specified, but password environment variable missing."
+      die "Quitting. Set EGGOWNER_PASS to fix"
+    } else {
+      adduser $::env(EGGOWNER)
+      setuser $::env(EGGOWNER) PASS $::env(EGGOWNER_PASS)
+      chattr $::env(EGGOWNER) +n
+      putlog "* Added handle '$::env(EGGOWNER)' as the owner of this Eggdrop"
+    }
+  } else {
+    if {[info exists ::env(EGGOWNER)]} {
+      putlog "* EGGOWNER variable set, but userfile already contains users. Owner not added."
+    }
+  }
+}
+
+### Add channels from host env variable
+foreach eggchan [split $::env(CHANNELS) ","] {
+  if {[string index $eggchan 0] ne "#"} {
+    continue
+  }
+  if {[lsearch -exact [channels] $eggchan] < 0} {
+    channel add $eggchan
+    putlog "* Adding $eggchan to Eggdrop"
+  }
+}
