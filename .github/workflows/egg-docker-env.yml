@@ -4,7 +4,9 @@ description: 'Test dockerisms and environment variables'
 on:
   push:
     workflow_dispatch:
-    branches: [ $default-branch ]
+    branches:
+    - master
+    - tests
 #  pull_request:
 #    branches: [ $default-branch ]
 
