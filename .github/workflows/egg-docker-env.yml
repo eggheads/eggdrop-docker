@@ -17,6 +17,7 @@ jobs:
       uses: actions/checkout@v3
     - run: cd develop
     - run: pwd
+    - run: ls
     - run: echo 'putlog "[userlist]"; putlog "[passwdok user -]"; putlog [channels]; putlog "$botnick"; putlog "[server list]"; putlog "[dcclist]"; die' >> docker.tcl
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag eggdrop:$(date +%s)
