@@ -3,6 +3,7 @@ description: 'Test dockerisms and environment variables'
 
 on:
   push:
+    workflow_dispatch:
     branches: [ $default-branch ]
 #  pull_request:
 #    branches: [ $default-branch ]
@@ -12,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository code
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
     - run: echo 'putlog "[userlist]"; putlog "[passwdok user -]"; putlog [channels]; putlog "$botnick"; putlog "[server list]"; putlog "[dcclist]"; die' >> docker.tcl
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag eggdrop:$(date +%s)
