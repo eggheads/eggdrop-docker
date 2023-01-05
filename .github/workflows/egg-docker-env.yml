@@ -2,7 +2,6 @@ name: 'Eggdrop Docker development testing'
 description: 'Test dockerisms and environment variables'
 
 on:
-  workflow_run:
   push:
     branches: [ $default-branch ]
 #  pull_request:
