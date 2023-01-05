@@ -3,7 +3,6 @@ description: 'Test dockerisms and environment variables'
 
 on:
   workflow_run:
-    branches: [ tests ]
   push:
     branches: [ $default-branch ]
 #  pull_request:
