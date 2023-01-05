@@ -15,9 +15,9 @@ jobs:
     steps:
     - name: Check out repository code
       uses: actions/checkout@v3
-    - run: pwd
-    - run: ls
     - run: echo 'putlog "[userlist]"; putlog "[passwdok user -]"; putlog [channels]; putlog "$botnick"; putlog "[server list]"; putlog "[dcclist]"; die' >> develop/docker.tcl
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag eggdrop:$(date +%s)
+      run: docker build . --file Dockerfile --tag eggdrop:dev
       working-directory: ./develop
+    - name: Run Eggdrop maybe
+      uses: docker://eggdrop:beta
