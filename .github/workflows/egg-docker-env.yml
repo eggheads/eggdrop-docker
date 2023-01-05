@@ -1,5 +1,4 @@
 name: 'Eggdrop Docker development testing'
-description: 'Test dockerisms and environment variables'
 
 on:
   push:
