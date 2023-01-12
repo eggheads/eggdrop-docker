@@ -7,7 +7,16 @@ RUN adduser -S eggdrop
 RUN apk add --no-cache 'su-exec>=0.2'
 
 RUN apk add --no-cache tcl bash openssl
-RUN apk add --no-cache --virtual egg-deps tcl-dev wget ca-certificates make tar gnupg build-base openssl-dev \
+RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev \
+  && wget "https://prdownloads.sourceforge.net/tcl/tcl8.6.12-src.tar.gz" -O tcl8.6.12-src.tar.gz \
+  && tar -zxf tcl8.6.12-src.tar.gz \
+  && ( cd tcl8.6.12 \
+# Fix Tcl UTF Emoji support
+    && sed -i "/define TCL_UTF_MAX/c\#define TCL_UTF_MAX 6" generic/tcl.h \
+    && cd unix \
+    && ./configure \
+    && make \
+    && make install ) \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.4.tar.gz \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.4.tar.gz.asc \
   && gpg --keyserver keyserver.ubuntu.com --recv-key E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
