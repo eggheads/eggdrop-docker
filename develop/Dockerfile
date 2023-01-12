@@ -11,15 +11,17 @@ ENV EGGDROP_COMMIT 2a6a36888f5aa2204d84a9e6282d35e5421c2c8a
 
 RUN apk --update add --no-cache bash openssl
 RUN apk --update add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev \
-  && wget "https://prdownloads.sourceforge.net/tcl/tcl8.6.12-src.tar.gz" -O tcl8.6.12-src.tar.gz \
-  && tar -zxf tcl8.6.12-src.tar.gz \
-  && ( cd tcl8.6.12 \
+  && wget "https://prdownloads.sourceforge.net/tcl/tcl8.6.13-src.tar.gz" -O tcl8.6.13-src.tar.gz \
+  && tar -zxf tcl8.6.13-src.tar.gz \
+  && ( cd tcl8.6.13 \
 # Fix Tcl UTF Emoji support
     && sed -i "/define TCL_UTF_MAX/c\#define TCL_UTF_MAX 6" generic/tcl.h \
     && cd unix \
     && ./configure \
     && make \
     && make install ) \
+  && rm -rf tcl8.6.13-src.tar.gz \
+  && rm -rf tcl8.6.13 \
   && wget "https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz" -O develop.tar.gz \
   && echo "$EGGDROP_SHA256 *develop.tar.gz" | sha256sum -c - \
   && tar -zxf develop.tar.gz \

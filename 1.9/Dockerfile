@@ -17,6 +17,8 @@ RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg bu
     && ./configure \
     && make \
     && make install ) \
+  && rm tcl8.6.12-src.tar.gz \
+  && rm -rf tcl8.6.12 \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.4.tar.gz \
   && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.4.tar.gz.asc \
   && gpg --keyserver keyserver.ubuntu.com --recv-key E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
