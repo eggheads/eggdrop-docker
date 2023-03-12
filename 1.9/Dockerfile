@@ -19,21 +19,21 @@ RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg bu
     && make install ) \
   && rm tcl8.6.12-src.tar.gz \
   && rm -rf tcl8.6.12 \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.4.tar.gz \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.4.tar.gz.asc \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.5.tar.gz \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.9/eggdrop-1.9.5.tar.gz.asc \
   && gpg --keyserver keyserver.ubuntu.com --recv-key E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
-  && gpg --batch --verify eggdrop-1.9.4.tar.gz.asc eggdrop-1.9.4.tar.gz \
+  && gpg --batch --verify eggdrop-1.9.5.tar.gz.asc eggdrop-1.9.5.tar.gz \
   && command -v gpgconf > /dev/null \
   && gpgconf --kill all \
-  && rm eggdrop-1.9.4.tar.gz.asc \
-  && tar -zxvf eggdrop-1.9.4.tar.gz \
-  && rm eggdrop-1.9.4.tar.gz \
-  && ( cd eggdrop-1.9.4 \
+  && rm eggdrop-1.9.5.tar.gz.asc \
+  && tar -zxvf eggdrop-1.9.5.tar.gz \
+  && rm eggdrop-1.9.5.tar.gz \
+  && ( cd eggdrop-1.9.5 \
     && ./configure \
     && make config \
     && make \
     && make install DEST=/home/eggdrop/eggdrop ) \
-  && rm -rf eggdrop-1.9.4 \
+  && rm -rf eggdrop-1.9.5 \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \
   && apk del egg-deps

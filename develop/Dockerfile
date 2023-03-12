@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:3.17
 MAINTAINER Geo Van O <geo@eggheads.org>
 
 RUN adduser -S eggdrop
@@ -6,8 +6,8 @@ RUN adduser -S eggdrop
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2'
 
-ENV EGGDROP_SHA256 caafc1ad001e2e77793dca37998cb94d88efadb4ec9c3de44c1004b04f15aa6e
-ENV EGGDROP_COMMIT 2a6a36888f5aa2204d84a9e6282d35e5421c2c8a
+ENV EGGDROP_SHA256 cc7936ee427959081651319119ac0b8f3581a18d7be7b20f71023954f1f69a91
+ENV EGGDROP_COMMIT 26ecf0921ee84c5bf61cb31014a75f02670b1af4
 
 RUN apk --update add --no-cache bash openssl
 RUN apk --update add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev \
