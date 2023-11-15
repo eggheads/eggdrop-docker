@@ -115,14 +115,16 @@ EOS
 
 
 ### Remove previous pid file, if present
-  PIDFILE=$(grep "set pidfile" ${CONFIG})
-  if [[ $PIDFILE == \#* ]]; then
-    PID=$(grep "set botnet-nick" ${CONFIG})
-    if [[ $PIDFILE == \#* ]]; then
-      PID=$(grep "set nick" ${CONFIG})
+  PID=$(grep "set pidfile" ${CONFIG})
+  if [[ $PID == \#* ]]; then
+    PIDNEXT=$(grep "set botnet-nick" ${CONFIG})
+    if [[ $PIDNEXT == \#* ]]; then
+      PIDNEXT=$(grep "set nick" ${CONFIG})
     fi
-    PIDBASE=$(echo $PID|awk '{gsub("\"", "", $3); print $3}')
-    PIDFILE=$(echo pid.$PIDBASE)
+    PIDBASE=$(echo $PIDNEXT|awk '{gsub("\"", "", $3); print $3}')
+    PID=$(echo pid.$PIDBASE)
+  else
+    PID=$(echo $PID|awk '{gsub("\"", "", $3); print $3}')
   fi
   if [ -e "$PID" ]; then
     PID="${PID//\"}"
