@@ -81,7 +81,7 @@ EOS
       -e "/you.need.to.change.this 6667/c\server add ${SERVER}" \
       -e "/#listen 3333 all/c\listen ${LISTEN} all" \
       -e "s/^#set dns-servers/set dns-servers/" \
-      -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${OWNER}\"" \
+      -e "/#set owner \"MrLame, MrsLame\"/c\set owner \"${EGGOWNER}\"" \
       -e "/set userfile \"LamestBot.user\"/c\set userfile data/${USERFILE}" \
       -e "/set chanfile \"LamestBot.chan\"/c\set chanfile data/${CHANFILE}" \
       -e "/set realname \"\/msg LamestBot hello\"/c\set realname \"Docker Eggdrop!\"" \
