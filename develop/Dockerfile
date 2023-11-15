@@ -7,8 +7,8 @@ RUN addgroup -S -g 3333 eggdrop \
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2' bash openssl
 
-ENV EGGDROP_SHA256 cc7936ee427959081651319119ac0b8f3581a18d7be7b20f71023954f1f69a91
-ENV EGGDROP_COMMIT 26ecf0921ee84c5bf61cb31014a75f02670b1af4
+ENV EGGDROP_SHA256 a155625d2ac3a0673e69c9d0149293910583c1623cd1f90f38ad2bcba7b2b766
+ENV EGGDROP_COMMIT 322bddbd102d58cdb00864a3a335b086beaf042c
 
 RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev \
   && wget "https://prdownloads.sourceforge.net/tcl/tcl8.6.13-src.tar.gz" -O tcl8.6.13-src.tar.gz --progress=dot:giga \
