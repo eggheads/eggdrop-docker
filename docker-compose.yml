@@ -17,7 +17,7 @@ services:
 ### If you want to add scripts, put them here. Don't mount to /scripts because
 ### it will overwrite the ones that are already used. Make sure you use 
 ### 'source scripts2/foo.tcl' as the path in the config.
-#     -/changethispart/scripts:/home/eggdrop/eggdrop/scripts2
+#     - /changethispart/scripts:/home/eggdrop/eggdrop/scripts2
 ### Enter config name, if not eggdrop.conf
 #    command: LeafBlower.conf
     stdin_open: true
