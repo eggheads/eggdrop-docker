@@ -1,5 +1,6 @@
 FROM alpine:3.17
-LABEL maintainer="Geo Van O <geo@eggheads.org>"
+LABEL org.opencontainers.image.authors="Geo Van O <geo@eggheads.org>" \
+      org.opencontainers.image.url="https://www.eggheads.org"
 
 RUN addgroup -S -g 3333 eggdrop \
     && adduser -S -u 3333 eggdrop eggdrop
