@@ -1,4 +1,4 @@
-FROM alpine:3.17
+FROM alpine:3.19
 LABEL org.opencontainers.image.authors="Geo Van O <geo@eggheads.org>" \
       org.opencontainers.image.url="https://www.eggheads.org"
 
@@ -8,8 +8,8 @@ RUN addgroup -S -g 3333 eggdrop \
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2' bash openssl
 
-ENV EGGDROP_SHA256 a155625d2ac3a0673e69c9d0149293910583c1623cd1f90f38ad2bcba7b2b766
-ENV EGGDROP_COMMIT 322bddbd102d58cdb00864a3a335b086beaf042c
+ENV EGGDROP_SHA256 a46bf0e77ed2af907fe6e15b77bddf0c55706258070a05c92810e0bd40a1fe3b
+ENV EGGDROP_COMMIT 4703f71067437c361ca8d5c8c4a09d41561a7a20
 
 RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev \
   && wget "https://prdownloads.sourceforge.net/tcl/tcl8.6.13-src.tar.gz" -O tcl8.6.13-src.tar.gz --progress=dot:giga \

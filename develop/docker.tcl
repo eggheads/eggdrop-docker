@@ -46,12 +46,17 @@ if {![countusers]} {
 }
 
 ### Add channels from host env variable
-foreach eggchan [split $::env(CHANNELS) ","] {
-  if {[string index $eggchan 0] ne "#"} {
-    continue
-  }
-  if {[lsearch -exact [channels] $eggchan] < 0} {
-    channel add $eggchan
-    putlog "* Adding $eggchan to Eggdrop"
+if {[info exists ::env(EGGOWNER)]} {
+  foreach eggchan [split $::env(CHANNELS) ","] {
+    if {[string index $eggchan 0] ne "#"} {
+      continue
+    }
+    if {[lsearch -exact [channels] $eggchan] < 0} {
+      channel add $eggchan
+      putlog "* Adding $eggchan to Eggdrop"
+    }
   }
 }
+
+### Update $auto_path to look for packages installed from alpine repo
+set auto_path [linsert $auto_path 0 /usr/lib]
