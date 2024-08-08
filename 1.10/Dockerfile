@@ -8,8 +8,8 @@ RUN addgroup -S -g 3333 eggdrop \
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2' bash openssl
 
-ENV EGGDROP_SHA256 d185512ad282aeee49a75328e847f604c762e94be19fb1e01a7e8a4f927730b8
-ENV EGGDROP_COMMIT f80f8ae468fd7bcec83407134ef5941225131104
+ENV EGGDROP_SHA256 a46bf0e77ed2af907fe6e15b77bddf0c55706258070a05c92810e0bd40a1fe3b
+ENV EGGDROP_COMMIT 4703f71067437c361ca8d5c8c4a09d41561a7a20
 
 RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev \
   && wget "https://prdownloads.sourceforge.net/tcl/tcl8.6.13-src.tar.gz" -O tcl8.6.13-src.tar.gz --progress=dot:giga \
@@ -24,20 +24,24 @@ RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg bu
     && make install ) \
   && rm -rf tcl8.6.13-src.tar.gz \
   && rm -rf tcl8.6.13 \
-  && wget "https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz" -O develop.tar.gz \
-  && echo "$EGGDROP_SHA256 *develop.tar.gz" | sha256sum -c - \
-  && tar -zxf develop.tar.gz \
-  && rm develop.tar.gz \
-    && ( cd eggdrop-$EGGDROP_COMMIT \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.10/eggdrop-1.10.0rc1.tar.gz \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.10/eggdrop-1.10.0rc1.tar.gz.asc \
+  && gpg --keyserver keyserver.ubuntu.com --recv-key E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
+  && gpg --batch --verify eggdrop-1.10.0rc1.tar.gz.asc eggdrop-1.10.0rc1.tar.gz \
+  && command -v gpgconf > /dev/null \
+  && gpgconf --kill all \
+  && rm eggdrop-1.10.0rc1.tar.gz.asc \
+  && tar -zxvf eggdrop-1.10.0rc1.tar.gz \
+  && rm eggdrop-1.10.0rc1.tar.gz \
+  && ( cd eggdrop-1.10.0rc1 \
     && ./configure \
     && make config \
-    && nproc="$(nproc)" \
-    && make -j"$nproc" \
+    && make \
     && make install DEST=/home/eggdrop/eggdrop ) \
-  && rm -rf eggdrop-$EGGDROP_COMMIT \
+  && rm -rf eggdrop-1.10rc1.0 \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \
-  && apk del --no-network egg-deps
+  && apk del egg-deps
 
 ENV NICK=""
 ENV SERVER=""
