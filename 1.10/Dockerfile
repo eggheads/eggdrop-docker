@@ -21,22 +21,22 @@ RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg bu
     && make install ) \
   && rm -rf tcl8.6.13-src.tar.gz \
   && rm -rf tcl8.6.13 \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.10/eggdrop-1.10.0rc1.tar.gz \
-  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.10/eggdrop-1.10.0rc1.tar.gz.asc \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.10/eggdrop-1.10.0.tar.gz \
+  && wget ftp://ftp.eggheads.org/pub/eggdrop/source/1.10/eggdrop-1.10.0.tar.gz.asc \
   && gpg --keyserver keyserver.ubuntu.com --recv-key E01C240484DE7DBE190FE141E7667DE1D1A39AFF \
-  && gpg --batch --verify eggdrop-1.10.0rc1.tar.gz.asc eggdrop-1.10.0rc1.tar.gz \
+  && gpg --batch --verify eggdrop-1.10.0.tar.gz.asc eggdrop-1.10.0.tar.gz \
   && command -v gpgconf > /dev/null \
   && gpgconf --kill all \
-  && rm eggdrop-1.10.0rc1.tar.gz.asc \
-  && tar -zxvf eggdrop-1.10.0rc1.tar.gz \
-  && rm eggdrop-1.10.0rc1.tar.gz \
-  && ( cd eggdrop-1.10.0rc1 \
+  && rm eggdrop-1.10.0.tar.gz.asc \
+  && tar -zxvf eggdrop-1.10.0.tar.gz \
+  && rm eggdrop-1.10.0.tar.gz \
+  && ( cd eggdrop-1.10.0 \
     && ./configure \
     && make config \
     && nproc="$(nproc)" \
     && make -j"$nproc" \
     && make install DEST=/home/eggdrop/eggdrop ) \
-  && rm -rf eggdrop-1.10rc1.0 \
+  && rm -rf eggdrop-1.10 \
   && mkdir /home/eggdrop/eggdrop/data \
   && chown -R eggdrop /home/eggdrop/eggdrop \
   && apk del --no-network egg-deps

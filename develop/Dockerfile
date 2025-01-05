@@ -8,22 +8,20 @@ RUN addgroup -S -g 3333 eggdrop \
 # grab su-exec for easy step-down from root
 RUN apk add --no-cache 'su-exec>=0.2' bash openssl
 
-ENV EGGDROP_SHA256=d185512ad282aeee49a75328e847f604c762e94be19fb1e01a7e8a4f927730b8
-ENV EGGDROP_COMMIT=f80f8ae468fd7bcec83407134ef5941225131104
+ENV EGGDROP_SHA256=34c09905c2e9df1e8ca4bae5bc395a8c60f4ca93123599788bae5164ebd8f8f5
+ENV EGGDROP_COMMIT=0f5599e1fafa97454dc7a8b147c6076638e95ba8
 
-RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev \
-  && wget "https://prdownloads.sourceforge.net/tcl/tcl8.6.13-src.tar.gz" -O tcl8.6.13-src.tar.gz --progress=dot:giga \
-  && tar -zxf tcl8.6.13-src.tar.gz \
-  && ( cd tcl8.6.13 \
-# Fix Tcl UTF Emoji support
-    && sed -i "/define TCL_UTF_MAX/c\#define TCL_UTF_MAX 6" generic/tcl.h \
+RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev bsd-compat-headers zlib-dev \
+  && wget "https://prdownloads.sourceforge.net/tcl/tcl9.0.1-src.tar.gz" -O tcl9.0.1-src.tar.gz --progress=dot:giga \
+  && tar -zxf tcl9.0.1-src.tar.gz \
+  && ( cd tcl9.0.1 \
     && cd unix \
     && ./configure \
     && nproc="$(nproc)" \
     && make -j"$nproc" \
     && make install ) \
-  && rm -rf tcl8.6.13-src.tar.gz \
-  && rm -rf tcl8.6.13 \
+  && rm -rf tcl9.0.1-src.tar.gz \
+  && rm -rf tcl9.0.1 \
   && wget "https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz" -O develop.tar.gz \
   && echo "$EGGDROP_SHA256 *develop.tar.gz" | sha256sum -c - \
   && tar -zxf develop.tar.gz \
