@@ -15,6 +15,7 @@ RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg bu
   && wget "https://prdownloads.sourceforge.net/tcl/tcl9.0.1-src.tar.gz" -O tcl9.0.1-src.tar.gz --progress=dot:giga \
   && tar -zxf tcl9.0.1-src.tar.gz \
   && ( cd tcl9.0.1 \
+    && find . \( -name configure -o -name tcl.m4 \) -exec sed -i 's/CFLAGS_OPTIMIZE="-O2/CFLAGS_OPTIMIZE="-Os/g' {} + \
     && cd unix \
     && ./configure \
     && nproc="$(nproc)" \
@@ -27,7 +28,7 @@ RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg bu
   && tar -zxf develop.tar.gz \
   && rm develop.tar.gz \
     && ( cd eggdrop-$EGGDROP_COMMIT \
-    && ./configure \
+    && CFLAGS="-Os" ./configure \
     && make config \
     && nproc="$(nproc)" \
     && make -j"$nproc" \
