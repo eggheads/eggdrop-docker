@@ -1,4 +1,4 @@
-FROM alpine:3.21
+FROM alpine:3.23
 LABEL org.opencontainers.image.authors="Geo Van O <geo@eggheads.org>" \
       org.opencontainers.image.url="https://www.eggheads.org"
 
@@ -6,22 +6,12 @@ RUN addgroup -S -g 3333 eggdrop \
     && adduser -S -u 3333 eggdrop eggdrop
 
 # grab su-exec for easy step-down from root
-RUN apk add --no-cache 'su-exec>=0.2' bash openssl
+RUN apk add --no-cache 'su-exec>=0.2' bash openssl tcl9 tcl9-dev
 
 ENV EGGDROP_SHA256=e42668f102c1446901b066d13fe0bf39622afca8d723f356ac2390d5faaf6e5e
 ENV EGGDROP_COMMIT=541e8ac17e549a40e177b5eea54e4abf24629a33
 
 RUN apk add --no-cache --virtual egg-deps wget ca-certificates make tar gnupg build-base openssl-dev bsd-compat-headers zlib-dev \
-  && wget "https://prdownloads.sourceforge.net/tcl/tcl9.0.1-src.tar.gz" -O tcl9.0.1-src.tar.gz --progress=dot:giga \
-  && tar -zxf tcl9.0.1-src.tar.gz \
-  && ( cd tcl9.0.1 \
-    && cd unix \
-    && ./configure \
-    && nproc="$(nproc)" \
-    && make -j"$nproc" \
-    && make install ) \
-  && rm -rf tcl9.0.1-src.tar.gz \
-  && rm -rf tcl9.0.1 \
   && wget "https://github.com/eggheads/eggdrop/archive/$EGGDROP_COMMIT.tar.gz" -O develop.tar.gz \
   && echo "$EGGDROP_SHA256 *develop.tar.gz" | sha256sum -c - \
   && tar -zxf develop.tar.gz \
