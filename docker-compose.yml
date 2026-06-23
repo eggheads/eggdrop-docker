@@ -1,5 +1,3 @@
-version: '3.1'
-
 services:
   eggdrop:
     image: eggdrop:1.9
@@ -23,3 +21,6 @@ services:
     stdin_open: true
     tty: true
     restart: always
+### Many scripts require extra OS packages (tcl-tls, tcl-lib, libsqlite3-tcl, etc.)
+### Install them on container start - remove if you build a custom image instead
+#    command: sh -c 'apk add tcl-lib tcl-tls && exec /home/eggdrop/eggdrop/entrypoint.sh eggdrop.conf'
