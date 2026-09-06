@@ -1,28 +1,60 @@
 services:
   eggdrop:
     image: eggdrop:stable
-    environment:
-### Your server timezone or the timezone you want your logs to use
-      - TZ=Europe/Paris
+
 ### If running for the first time without providing your own config, you
 ### probably want to set these variables
-#      - SERVER=add.your.irc.server
-#      - NICK=LamestBot
-### Make this match your listen setting in the config
+    environment:
+    ### Set the server you want to connect to
+      - SERVER="add.your.irc.server"
+    #  - SERVER="you.need.to.change.this 6667"
+    #  - SERVER="another.example.com 7000 password"
+    #  - SERVER="[2001:db8:618:5c0:263::] 6669 password"
+    #  - SERVER="ssl.example.net +6697"
+
+    ### Set the nickname you want to use for your Eggdrop
+      - NICK=LamestBot
+
+    ### Your server timezone or the timezone you want your logs to use
+    #  - TZ=UTC
+    #  - TZ=America/New_York
+    #  - TZ=Europe/Amsterdam
+
+    ### Set the handle you will use with Eggdrop
+      - EGGOWNER=LamestBot
+
+    ### Set the password to use for the handle set above
+      - EGGOWNER_PASS=0pM3CuzImLam3
+
+    ### Add channels you want the Eggdrop to join on startup
+    #  - CHANNELS=#lamer,#lamest
+
+    ### Set the port you want Eggdrop to listen for partline connections on
+    #  - LISTEN=3333
+
+### Make this match your listen setting in the config/above
     ports:
       - "3333:3333"
+
 ### Change this to the path with your config and user/channel files
-    volumes:
-      - /changethispart/data/:/home/eggdrop/eggdrop/data/
+    # volumes:
+    #  - /changethispart/data/:/home/eggdrop/eggdrop/data/
+
 ### If you want to add scripts, put them here. Don't mount to /scripts because
 ### it will overwrite the ones that are already used. Make sure you use 
 ### 'source scripts2/foo.tcl' as the path in the config.
-#      - /changethispart/scripts:/home/eggdrop/eggdrop/scripts2
+    #  - /changethispart/scripts:/home/eggdrop/eggdrop/scripts2
+
+### Alternate commandline run settings
+
 ### Enter config name, if not eggdrop.conf
 #    command: LeafBlower.conf
+
+### Some scripts require extra OS packages (tcl-tls, tcl-lib, libsqlite3-tcl, etc.)
+### Install them the first time you run the container
+#    command: sh -c 'apk add tcl-lib tcl-tls && exec /home/eggdrop/eggdrop/entrypoint.sh eggdrop.conf'
+
+####################
     stdin_open: true
     tty: true
     restart: always
-### Many scripts require extra OS packages (tcl-tls, tcl-lib, libsqlite3-tcl, etc.)
-### Install them on container start - remove if you build a custom image instead
-#    command: sh -c 'apk add tcl-lib tcl-tls && exec /home/eggdrop/eggdrop/entrypoint.sh eggdrop.conf'
